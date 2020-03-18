@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<QCARConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="qcar_config.xsd">
+  <Tracking>
+    <ImageTarget name="Joker" size="1.000000 0.655936" />
+    <ImageTarget name="ASwino" size="1.000000 0.657258" />
+    <ImageTarget name="AStrefl" size="1.000000 0.642930" />
+    <ImageTarget name="ASserce" size="1.000000 0.648000" />
+    <ImageTarget name="10wino" size="1.000000 0.637450" />
+    <ImageTarget name="10trefl" size="1.000000 0.649899" />
+    <ImageTarget name="10serce" size="1.000000 0.650602" />
+    <ImageTarget name="10pik" size="1.000000 0.642570" />
+    <ImageTarget name="2pik" size="1.000000 0.655870" />
+  </Tracking>
+</QCARConfig>

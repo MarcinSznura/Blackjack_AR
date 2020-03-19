@@ -13,6 +13,7 @@ public class GameMaster : MonoBehaviour
     [SerializeField] int playerBalance;
     [SerializeField] int betProposition;
     [SerializeField] int bet;
+    [SerializeField] bool aiPlaying = false;
 
     [Header("Decks and Hands")]
     [SerializeField] List<GameObject> allDeck = new List<GameObject>();
@@ -37,6 +38,8 @@ public class GameMaster : MonoBehaviour
 
     void Start()
     {
+        mainMenuCanvas.enabled = true;
+        gameCanvas.enabled = false;
         playerBalance = 200;
         state = States.NotStarted;
         PutAllCardsInAiDeck();
@@ -48,12 +51,10 @@ public class GameMaster : MonoBehaviour
         {
             case States.NotStarted:
                 betButtons.SetActive(false);
-                startGameButtons.SetActive(true);
                 break;
 
             case States.Beting:
                 betButtons.SetActive(true);
-                startGameButtons.SetActive(false);
                 break;
 
             case States.SetingUp:
@@ -75,15 +76,20 @@ public class GameMaster : MonoBehaviour
                 break;
 
             case States.AiMove:
-                AiAlgoithm();
-                Debug.Log("Stage 5");
+                if (!aiPlaying)
+                {
+                    aiPlaying = true;
+                    StartCoroutine(AiAlgoithm(2));
+                    Debug.Log("Stage 5");
+                }
                 break;
+                
 
             case States.Fighting:
                 if (PlayerWon())
                 {
                     AnnounceWinner(0);
-                    playerBalance += bet;
+                    playerBalance += 2 * bet;
                 }
                 else if (playerScore == aiScore) AnnounceTie();
                 else AnnounceWinner(1);
@@ -91,7 +97,7 @@ public class GameMaster : MonoBehaviour
                 playerScore = 0;
                 PutAllCardsInAiDeck();
                 state = States.Beting;
-                Debug.Log("Stage 6");
+                DiscardAiCards();
                 break;
         }
     }
@@ -213,8 +219,8 @@ public class GameMaster : MonoBehaviour
     {
         DrawCard();
         DrawCard();
-        ShowCard1(aiHand[0]);
-        ShowCard2(aiHand[1]);
+        ShowCard(aiHand[0],0);
+        ShowCard(aiHand[1],1);
     }
 
     void DrawCard()
@@ -225,16 +231,18 @@ public class GameMaster : MonoBehaviour
         CalculateAiPoints();
     }
 
-    void ShowCard1(int cardIndex)
+    void DiscardAiCards()
     {
-        var card = Instantiate(allDeck[cardIndex],holder1.transform.position,Quaternion.identity,holder1.transform);
-        card.transform.eulerAngles = new Vector3(card.transform.eulerAngles.x - 90, 0, 180);
+        var cards = GameObject.FindGameObjectsWithTag("AiCards");
+        foreach (var card in cards)
+        {
+            Destroy(card);
+        }
     }
 
-    void ShowCard2(int cardIndex)
+    void ShowCard(int cardIndex,int handIndex)
     {
-        var card = Instantiate(allDeck[cardIndex], holder2.transform.position, Quaternion.identity, holder2.transform);
-        card.transform.eulerAngles = new Vector3(card.transform.eulerAngles.x - 90, 0, 180);
+        Instantiate(allDeck[cardIndex], new Vector2(200 + 250 * handIndex, 600), Quaternion.identity, gameCanvas.transform);
     }
 
     IEnumerator WaitBeforePlayerSetupPhase(float time)
@@ -285,29 +293,35 @@ public class GameMaster : MonoBehaviour
         CalculatePlayerPoints();
         if (IsPlayerOver21())
         {
-            state = States.Fighting;
+            state = States.AiMove;
         }
     }
 
     #endregion
 
 
-    #region("Ai Move Phase")
-    void AiAlgoithm()
+    #region AI MOVE PHASE
+    IEnumerator AiAlgoithm (float time)
     {
         //ShowCard(1); TODO make me work
         if (IsAiOver21())
         {
+            aiPlaying = false;
             state = States.Fighting;
         }
         else
         {
             if (aiScore < 17)
             {
+                yield return new WaitForSeconds(time);
+                aiPlaying = false;
                 DrawCard();
+                ShowCard(aiHand[aiHand.Count-1],aiHand.Count - 1);
             }
             else
             {
+                yield return new WaitForSeconds(time);
+                aiPlaying = false;
                 state = States.Fighting;
             }
 
@@ -415,7 +429,7 @@ public class GameMaster : MonoBehaviour
 
     public void ChangeState(int newState)
     {
-        state = States.Fighting;
+        state = States.AiMove;
     }
 
     public int GetPlayerBalance()

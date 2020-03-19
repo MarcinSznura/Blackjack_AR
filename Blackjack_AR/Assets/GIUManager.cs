@@ -22,11 +22,18 @@ public class GIUManager : MonoBehaviour
     void Update()
     {
         balanceText.text = gameMaster.GetPlayerBalance().ToString();
-        betText.text = "Bet: " + gameMaster.GetPlayerBet().ToString();
-        betPropositionText.text = "Bet Propostion: " + gameMaster.GetPlayerBetProposition().ToString();
         stageText.text = "Stage: " + gameMaster.GetCurrentStage().ToString();
         enemyScoreText.text = "Ai score: " + gameMaster.GetEnemyScore().ToString();
         playerScoreText.text = "Player score: " + gameMaster.GetPlayerScore().ToString();
+
+        if (gameMaster.GetCurrentStage() == 1)
+        {
+            betText.text = gameMaster.GetPlayerBetProposition().ToString();
+        }
+        else
+        {
+            betText.text = gameMaster.GetPlayerBet().ToString();
+        }
     }
 
 

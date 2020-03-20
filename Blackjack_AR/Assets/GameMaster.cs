@@ -14,6 +14,7 @@ public class GameMaster : MonoBehaviour
     [SerializeField] int betProposition;
     [SerializeField] int bet;
     [SerializeField] bool aiPlaying = false;
+    bool waitingForLastRoundToEnd = false;
 
     [Header("Decks and Hands")]
     [SerializeField] List<GameObject> allDeck = new List<GameObject>();
@@ -26,15 +27,18 @@ public class GameMaster : MonoBehaviour
 
     [Header("Buttons")]
     [SerializeField] GameObject betButtons;
-    [SerializeField] GameObject startGameButtons;
 
     [Header("Canvas")]
     [SerializeField] Canvas mainMenuCanvas;
     [SerializeField] Canvas gameCanvas;
 
-    [Header("Ai cards holders")]
-    [SerializeField] GameObject holder1;
-    [SerializeField] GameObject holder2;
+    [Header("Win/Lose info")]
+    [SerializeField] GameObject playerWinInfo;
+    [SerializeField] GameObject playerLoseInfo;
+    [SerializeField] GameObject playerTieInfo;
+    [SerializeField] GameObject aiWinInfo;
+    [SerializeField] GameObject aiLoseInfo;
+    [SerializeField] GameObject aiTieInfo;
 
     void Start()
     {
@@ -55,9 +59,11 @@ public class GameMaster : MonoBehaviour
 
             case States.Beting:
                 betButtons.SetActive(true);
+                waitingForLastRoundToEnd = false;
                 break;
 
             case States.SetingUp:
+                HideAnnouncements();
                 if (aiHand.Count == 0)
                 {
                     betButtons.SetActive(false);
@@ -86,18 +92,30 @@ public class GameMaster : MonoBehaviour
                 
 
             case States.Fighting:
-                if (PlayerWon())
+                if (!waitingForLastRoundToEnd)
                 {
-                    AnnounceWinner(0);
-                    playerBalance += 2 * bet;
+                    waitingForLastRoundToEnd = true;
+                    if (PlayerWon())
+                    {
+                        AnnounceWinner(0);
+                        playerBalance += 2 * bet;
+                    }
+                    else
+                    {
+                        if (playerScore == aiScore)
+                        {
+                            AnnounceTie();
+                            playerBalance += bet;
+                        }
+                        else AnnounceWinner(1);
+                    }
+                    aiScore = 0;
+                    playerScore = 0;
+                    PutAllCardsInAiDeck();
+                    DiscardAiCards();
+                    StartCoroutine(WaitBeforeChangingPhase(.5f, States.Beting));
+
                 }
-                else if (playerScore == aiScore) AnnounceTie();
-                else AnnounceWinner(1);
-                aiScore = 0;
-                playerScore = 0;
-                PutAllCardsInAiDeck();
-                state = States.Beting;
-                DiscardAiCards();
                 break;
         }
     }
@@ -251,6 +269,11 @@ public class GameMaster : MonoBehaviour
         state = States.PlayerSetup;
     }
 
+    IEnumerator WaitBeforeChangingPhase(float time, States nextState)
+    {
+        yield return new WaitForSeconds(time);
+        state = nextState;
+    }
 
 
     #endregion
@@ -390,6 +413,8 @@ public class GameMaster : MonoBehaviour
     void AnnounceTie()
     {
         print("tie!");
+        aiTieInfo.SetActive(true);
+        playerTieInfo.SetActive(true);
     }
 
     void AnnounceWinner(int player)
@@ -397,12 +422,32 @@ public class GameMaster : MonoBehaviour
         if (player == 0)
         {
             print("Player wins");
+            playerWinInfo.SetActive(true);
+            aiWinInfo.SetActive(false);
+
+            playerLoseInfo.SetActive(false);
+            aiLoseInfo.SetActive(true);
         }
 
         if (player == 1)
         {
             print("AI wins");
+            aiWinInfo.SetActive(true);
+            playerWinInfo.SetActive(false);
+
+            playerLoseInfo.SetActive(true);
+            aiLoseInfo.SetActive(false);
         }
+    }
+
+    void HideAnnouncements()
+    {
+        aiWinInfo.SetActive(false);
+        playerWinInfo.SetActive(false);
+        playerLoseInfo.SetActive(false);
+        aiLoseInfo.SetActive(false);
+        aiTieInfo.SetActive(false);
+        playerTieInfo.SetActive(false);
     }
 
     bool IsPlayerOver21()

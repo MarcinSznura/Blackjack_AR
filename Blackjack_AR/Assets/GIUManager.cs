@@ -9,7 +9,6 @@ public class GIUManager : MonoBehaviour
     [SerializeField] TextMeshProUGUI balanceText;
     [SerializeField] TextMeshProUGUI betText;
     [SerializeField] TextMeshProUGUI betPropositionText;
-    [SerializeField] TextMeshProUGUI stageText;
     [SerializeField] TextMeshProUGUI enemyScoreText;
     [SerializeField] TextMeshProUGUI playerScoreText;
 
@@ -22,9 +21,8 @@ public class GIUManager : MonoBehaviour
     void Update()
     {
         balanceText.text = gameMaster.GetPlayerBalance().ToString();
-        stageText.text = "Stage: " + gameMaster.GetCurrentStage().ToString();
-        enemyScoreText.text = "Ai score: " + gameMaster.GetEnemyScore().ToString();
-        playerScoreText.text = "Player score: " + gameMaster.GetPlayerScore().ToString();
+        enemyScoreText.text = gameMaster.GetEnemyScore().ToString();
+        playerScoreText.text = gameMaster.GetPlayerScore().ToString();
 
         if (gameMaster.GetCurrentStage() == 1)
         {

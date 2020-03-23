@@ -1,12 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <QCARConfig xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="qcar_config.xsd">
   <Tracking>
+    <ImageTarget name="CardJ-2" size="1.000000 1.333333" />
+    <ImageTarget name="CardJ-1" size="1.000000 1.333333" />
+    <ImageTarget name="CardQ-2" size="1.000000 1.333333" />
+    <ImageTarget name="CardQ-1" size="1.000000 1.333333" />
+    <ImageTarget name="CardK-2" size="1.000000 1.333333" />
+    <ImageTarget name="CardK-1" size="1.000000 1.333333" />
+    <ImageTarget name="Card10-1" size="1.000000 1.333333" />
+    <ImageTarget name="Card10-2" size="1.000000 1.333333" />
+    <ImageTarget name="Card2-3" size="1.000000 1.333333" />
+    <ImageTarget name="Card2-4" size="1.000000 1.333333" />
+    <ImageTarget name="Card2-2" size="1.000000 1.333333" />
+    <ImageTarget name="Card2-1" size="1.000000 1.333333" />
     <ImageTarget name="Card11-4" size="1.000000 1.333333" />
     <ImageTarget name="Card11-3" size="1.000000 1.333333" />
     <ImageTarget name="Card11-1" size="1.000000 1.333333" />
     <ImageTarget name="Card11-2" size="1.000000 1.333333" />
-    <ImageTarget name="Card10-2" size="1.000000 1.333333" />
-    <ImageTarget name="Card10-1" size="1.000000 1.333333" />
     <ImageTarget name="Card9-4" size="1.000000 1.333333" />
     <ImageTarget name="Card9-3" size="1.000000 1.333333" />
     <ImageTarget name="Card9-2" size="1.000000 1.333333" />
@@ -31,10 +41,6 @@
     <ImageTarget name="Card4-3" size="1.000000 1.333333" />
     <ImageTarget name="Card4-1" size="1.000000 1.333333" />
     <ImageTarget name="Card4-2" size="1.000000 1.333333" />
-    <ImageTarget name="Card2-4" size="1.000000 1.333333" />
-    <ImageTarget name="Card2-3" size="1.000000 1.333333" />
-    <ImageTarget name="Card2-1" size="1.000000 1.333333" />
-    <ImageTarget name="Card2-2" size="1.000000 1.333333" />
     <ImageTarget name="Card3-4" size="1.000000 1.333333" />
     <ImageTarget name="Card3-1" size="1.000000 1.333333" />
     <ImageTarget name="Card3-2" size="1.000000 1.333333" />

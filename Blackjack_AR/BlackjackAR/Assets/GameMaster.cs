@@ -16,12 +16,14 @@ public class GameMaster : MonoBehaviour
     [SerializeField] bool aiPlaying = false;
     [SerializeField] bool waitingForLastRoundToEnd = false;
     [SerializeField] bool jokerAppeared = false;
+    public string textInfo = "";
 
     [Header("Decks and Hands")]
     [SerializeField] List<GameObject> allDeck = new List<GameObject>();
     [SerializeField] List<int> currentDeck = new List<int>();
     [SerializeField] List<int> aiHand = new List<int>();
     public List<int> playerHand = new List<int>();
+    [SerializeField] GameObject hidenCardPrefab;
 
     [Header("Current state")]
     [SerializeField] States state;
@@ -41,13 +43,16 @@ public class GameMaster : MonoBehaviour
     [SerializeField] GameObject aiLoseInfo;
     [SerializeField] GameObject aiTieInfo;
 
+    [Header("Spawn Position")]
+    [SerializeField] GameObject spawnPosition1;
+
     void Start()
     {
         mainMenuCanvas.enabled = true;
         gameCanvas.enabled = false;
         playerBalance = 200;
         state = States.NotStarted;
-        PutAllCardsInAiDeck();
+        //PutAllCardsInAiDeck();
     }
 
     void Update()
@@ -59,26 +64,38 @@ public class GameMaster : MonoBehaviour
                 break;
 
             case States.Beting:
+                PutAllCardsInAiDeck();
                 betButtons.SetActive(true);
                 waitingForLastRoundToEnd = false;
                 break;
 
             case States.SetingUp:
-                aiScore = 0;
-                playerScore = 0;
-                HideAnnouncements();
                 jokerAppeared = false;
                 if (aiHand.Count == 0)
                 {
+                    aiScore = 0;
+                    playerScore = 0;
+                    HideAnnouncements();
                     betButtons.SetActive(false);
-                    GiveCardsToAi();
-                    StartCoroutine(WaitBeforePlayerSetupPhase(1));
+                    GiveStartCardsToAi();
+                    aiScore = allDeck[aiHand[1]].GetComponent<AiCardsValues>().GetCardValue();
+                    StartCoroutine(WaitBeforeChangingPhase(1f,States.PlayerSetup));
                 }
                 break;
 
             case States.PlayerSetup:
-                if (TwoCardsOnTable()) StartCoroutine(WaitBeforePlayerMovePhase(2)); 
-                else ShowMessagePut2CardsOnTable();
+                if (CardsOnTable())
+                {
+                    textInfo = "";
+                    StartCoroutine(WaitBeforeChangingPhase(0, States.PlayerMove));
+                }
+                else textInfo = "Put cards on table";
+
+                if (jokerAppeared)
+                {
+                    textInfo = "";
+                    state = States.AiMove;
+                }
                 break;
 
             case States.PlayerMove:
@@ -120,51 +137,82 @@ public class GameMaster : MonoBehaviour
                         validator.RestartCountedCards();
                     }
                     
-                    PutAllCardsInAiDeck();
-                    DiscardAiCards();
-                    StartCoroutine(WaitBeforeChangingPhase(2f, States.Beting));
+                    StartCoroutine(WaitBeforeChangingPhase(1f, States.Beting));
 
                 }
                 break;
         }
     }
 
-    #region BUTTONS
-    public void StartGame()
+
+    #region STATES HANDELER
+    IEnumerator WaitBeforeChangingPhase(float time, States nextState)
     {
-        bet = 0;
-        betProposition = 0;
-        aiScore = 0;
-        playerScore = 0;
-        mainMenuCanvas.enabled = false;
-        gameCanvas.enabled = true;
-        state = States.Beting;
+        yield return new WaitForSeconds(time);
+        state = nextState;
     }
 
-    public void ExitGame()
-    {
-        Application.Quit();
-    }
+    #endregion //STATES HANDELER
 
-
-    #endregion //BUTTONS
-
-
-    #region("Initial Parameters")
+    #region AI CARDS DEALER
     void PutAllCardsInAiDeck()
     {
         currentDeck.Clear();
-        aiHand.Clear();
-        playerHand.Clear();
         for (int i = 0; i < 52; i++)
         {
             currentDeck.Add(i);
         }
     }
-    #endregion
+
+    void GiveStartCardsToAi()
+    {
+        SpawnHidenCard(0);
+        DrawCard();
+        DrawCard();
+        ShowCard(aiHand[1], 1);
+    }
+
+    void DrawCard()
+    {
+        int newCard = Random.Range(0, currentDeck.Count);
+        aiHand.Add(newCard);
+        currentDeck.Remove(newCard);
+        CalculateAiPoints();
+    }
+
+    void RemoveAiCardsFromScreen()
+    {
+        var cards = GameObject.FindGameObjectsWithTag("AiCards");
+        foreach (var card in cards)
+        {
+            Destroy(card);
+        }
+    }
+
+    void SpawnHidenCard(int handIndex)
+    {
+        Instantiate(hidenCardPrefab,
+            new Vector2(spawnPosition1.transform.position.x + (200*handIndex), spawnPosition1.transform.position.y), 
+            Quaternion.identity, gameCanvas.transform);
+    }
+
+    void ShowCard(int cardIndex, int handIndex)
+    {
+        Instantiate(allDeck[cardIndex], 
+            new Vector2(spawnPosition1.transform.position.x + (200 * handIndex), spawnPosition1.transform.position.y), 
+            Quaternion.identity, gameCanvas.transform);
+    }
+
+    void ClearHands()
+    {
+        aiHand.Clear();
+        playerHand.Clear();
+    }
 
 
-    #region("Beting")
+    #endregion //AI CARDS DEALER
+
+    #region BEATING/BUTTONS
 
     public void Raise10()
     {
@@ -235,93 +283,45 @@ public class GameMaster : MonoBehaviour
             playerBalance -= betProposition;
             betProposition = 0;
             state = States.SetingUp;
+
+            RemoveAiCardsFromScreen();
+            ClearHands();
         }
     }
 
-    #endregion
-
-
-    #region SETTING UP PHASE
-    void GiveCardsToAi()
+    public void StartGame()
     {
-        DrawCard();
-        DrawCard();
-        ShowCard(aiHand[0],0);
-        ShowCard(aiHand[1],1);
+        bet = 0;
+        betProposition = 0;
+        aiScore = 0;
+        playerScore = 0;
+        mainMenuCanvas.enabled = false;
+        gameCanvas.enabled = true;
+        state = States.Beting;
     }
 
-    void DrawCard()
+    public void ExitGame()
     {
-        int newCard = Random.Range(0, currentDeck.Count);
-        aiHand.Add(newCard);
-        currentDeck.Remove(newCard);
-        CalculateAiPoints();
-    }
-
-    void DiscardAiCards()
-    {
-        var cards = GameObject.FindGameObjectsWithTag("AiCards");
-        foreach (var card in cards)
-        {
-            Destroy(card);
-        }
-    }
-
-    void ShowCard(int cardIndex,int handIndex)
-    {
-        Instantiate(allDeck[cardIndex], new Vector2(200 + 250 * handIndex, 600), Quaternion.identity, gameCanvas.transform);
-    }
-
-    IEnumerator WaitBeforePlayerSetupPhase(float time)
-    {
-        yield return new WaitForSeconds(time);
-        state = States.PlayerSetup;
-    }
-
-    IEnumerator WaitBeforeChangingPhase(float time, States nextState)
-    {
-        yield return new WaitForSeconds(time);
-        state = nextState;
+        Application.Quit();
     }
 
 
-    #endregion
 
+    #endregion // BEATING + BUTTONS
 
-    #region("Player Setup Phase")
-    bool TwoCardsOnTable()
+    #region PLAYER SETUP PHASE
+    bool CardsOnTable()
     {
-        if (playerScore > 0)
+        if (playerHand.Count > 0)
         {
             return true ;
         }
         else
         {
-            if (jokerAppeared)
-            {
-                state = States.AiMove;
-            }
-            ShowMessagePut2CardsOnTable();
             return false;
         }
-
     }
-
-    void ShowMessagePut2CardsOnTable()
-    {
-        //Debug.Log("Put 2 card on table");
-        //text.text put those cards;
-    }
-
-
-    IEnumerator WaitBeforePlayerMovePhase(float time)
-    {
-        yield return new WaitForSeconds(time);
-        state = States.PlayerMove;
-    }
-
-    #endregion
-
+    #endregion //PLAYER SETUP PHASE
 
     #region PLAYER MOVE PHASE
     void PlayerReader()
@@ -335,6 +335,10 @@ public class GameMaster : MonoBehaviour
         {
             state = States.AiMove;
         }
+        if (playerScore == 21)
+        {
+            state = States.AiMove;
+        }
     }
 
     public void SetJokerAppeared(bool joker)
@@ -342,14 +346,13 @@ public class GameMaster : MonoBehaviour
         jokerAppeared = joker;
     }
 
-    #endregion
-
+    #endregion //PLAYER MOVE PHASE
 
     #region AI MOVE PHASE
     IEnumerator AiAlgoithm (float time)
     {
+        ShowCard(aiHand[0],0);
         CalculateAiPoints();
-        //ShowCard(1); TODO make me work
         print("Corutine ai start");
         if (IsAiOver21())
         {
@@ -390,18 +393,15 @@ public class GameMaster : MonoBehaviour
         {
             foreach (var card in aiHand)
             {
-                if (card == 11)
+                if (allDeck[card].GetComponent<AiCardsValues>().GetCardValue() == 11)
                     aiScore -= 10;
                 if (aiScore < 22) break;
             }
         }
     }
-
-
     #endregion
 
-
-    #region("Fighting Phase")
+    #region FIGHTING PHASE
     void CalculatePlayerPoints()
     {
         playerScore = 0;
@@ -428,14 +428,9 @@ public class GameMaster : MonoBehaviour
         if (playerScore > aiScore) return true;
         else return false;
     }
+    #endregion //FIGHTING PHASE
 
-
-    #endregion
-
-
-    #region ("Logic for calculation")
-
-
+    #region SCORE SUMMARY 
     void AnnounceTie()
     {
         print("tie!");
@@ -488,9 +483,9 @@ public class GameMaster : MonoBehaviour
         else return false;
     }
 
-    #endregion
+    #endregion //SCORE SUMMARY 
 
-
+    #region PUBLIC GETS
 
     public void IncreasePlayerScore(int cardValue)
     {
@@ -558,5 +553,5 @@ public class GameMaster : MonoBehaviour
         }
     }
 
-
+    #endregion //PUBLIC GETS
 }

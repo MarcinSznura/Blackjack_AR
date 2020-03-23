@@ -8,9 +8,9 @@ public class GIUManager : MonoBehaviour
     GameMaster gameMaster;
     [SerializeField] TextMeshProUGUI balanceText;
     [SerializeField] TextMeshProUGUI betText;
-    [SerializeField] TextMeshProUGUI betPropositionText;
     [SerializeField] TextMeshProUGUI enemyScoreText;
     [SerializeField] TextMeshProUGUI playerScoreText;
+    [SerializeField] TextMeshProUGUI infoText;
 
 
     private void Awake()
@@ -23,6 +23,7 @@ public class GIUManager : MonoBehaviour
         balanceText.text = gameMaster.GetPlayerBalance().ToString();
         enemyScoreText.text = gameMaster.GetEnemyScore().ToString();
         playerScoreText.text = gameMaster.GetPlayerScore().ToString();
+        infoText.text = gameMaster.textInfo;
 
         if (gameMaster.GetCurrentStage() == 1)
         {

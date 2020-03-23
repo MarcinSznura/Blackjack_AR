@@ -81,12 +81,7 @@ else
                 component.enabled = true;
             }
             Debug.Log(" Trackable " +mTrackableBehaviour.TrackableName +" found");
-            /*
-            if (cardName == "Joker" && CanIRead())
-            {
-                FindObjectOfType<GameMaster>().SetJokerAppeared(true);
-            }
-            */
+        
         }
 
 

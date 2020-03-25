@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using Vuforia;
 
 public class GameMaster : MonoBehaviour
 {
@@ -191,16 +190,25 @@ public class GameMaster : MonoBehaviour
 
     void SpawnHidenCard(int handIndex)
     {
-        Instantiate(hidenCardPrefab,
-            new Vector2(spawnPosition1.transform.position.x + (200*handIndex), spawnPosition1.transform.position.y), 
-            Quaternion.identity, gameCanvas.transform);
+            Instantiate(hidenCardPrefab,
+                new Vector2(spawnPosition1.transform.position.x + (200 * handIndex), spawnPosition1.transform.position.y),
+                Quaternion.identity, gameCanvas.transform);
     }
 
     void ShowCard(int cardIndex, int handIndex)
     {
-        Instantiate(allDeck[cardIndex], 
-            new Vector2(spawnPosition1.transform.position.x + (200 * handIndex), spawnPosition1.transform.position.y), 
-            Quaternion.identity, gameCanvas.transform);
+        if (handIndex < 5)
+        {
+            Instantiate(allDeck[cardIndex],
+                new Vector2(spawnPosition1.transform.position.x + (200 * handIndex), spawnPosition1.transform.position.y),
+                Quaternion.identity, gameCanvas.transform);
+        }
+        else
+        {
+            Instantiate(allDeck[cardIndex],
+               new Vector2(spawnPosition1.transform.position.x + (200 * (handIndex-5)), spawnPosition1.transform.position.y-300),
+               Quaternion.identity, gameCanvas.transform);
+        }
     }
 
     void ClearHands()
@@ -305,6 +313,10 @@ public class GameMaster : MonoBehaviour
         Application.Quit();
     }
 
+    public void OpenSettings()
+    {
+        Debug.Log("Do it!");
+    }
 
 
     #endregion // BEATING + BUTTONS
@@ -358,11 +370,10 @@ public class GameMaster : MonoBehaviour
         {
             aiPlaying = false;
             state = States.Fighting;
-            print("Corutine ai end");
         }
         else
         {
-            if (aiScore < 17)
+            if (!WillAiWinNow())
             {
                 yield return new WaitForSeconds(time);
                 DrawCard();
@@ -374,7 +385,6 @@ public class GameMaster : MonoBehaviour
                 yield return new WaitForSeconds(time);
                 aiPlaying = false;
                 state = States.Fighting;
-                print("Corutine ai end");
             }
 
         }
@@ -469,6 +479,20 @@ public class GameMaster : MonoBehaviour
         aiLoseInfo.SetActive(false);
         aiTieInfo.SetActive(false);
         playerTieInfo.SetActive(false);
+    }
+
+    private bool WillAiWinNow()
+    {
+        if (IsPlayerOver21() || aiScore == 21)
+        {
+            return true;
+        }
+        else
+        {
+            if (aiScore > playerScore) return true;
+            else return false;
+        }
+        
     }
 
     bool IsPlayerOver21()

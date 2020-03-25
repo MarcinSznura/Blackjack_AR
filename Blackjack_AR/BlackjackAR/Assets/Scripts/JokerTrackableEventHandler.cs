@@ -1,12 +1,9 @@
 ﻿using UnityEngine;
-using Vuforia;
-using System.Collections;
-using System.Collections.Generic;
 
 
 namespace Vuforia
 {
-    public class JokerTrackableEventHandlerForCards : MonoBehaviour, ITrackableEventHandler
+    public class JokerTrackableEventHandler : MonoBehaviour, ITrackableEventHandler
     {
 
         [SerializeField] bool isTracked;

@@ -1,12 +1,10 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 using Vuforia;
 
 public class Validator : MonoBehaviour
 {
     [Header("Children")]
-    [SerializeField] DefaultTrackableEventHandlerForCards[] children;
+    [SerializeField] CardTrackableEventHandler[] children;
     [SerializeField] float timeToCountCard = 1f;
     [SerializeField] float minDistanceBetweenCards;
 
@@ -18,7 +16,7 @@ public class Validator : MonoBehaviour
 
     private void Awake()
     {
-        children = GetComponentsInChildren<DefaultTrackableEventHandlerForCards>();
+        children = GetComponentsInChildren<CardTrackableEventHandler>();
         gameMaster = FindObjectOfType<GameMaster>();
     }
 
@@ -35,9 +33,9 @@ public class Validator : MonoBehaviour
             }
         }
 
-        foreach (DefaultTrackableEventHandlerForCards child in children)
+        foreach (CardTrackableEventHandler child in children)
         {
-            foreach (DefaultTrackableEventHandlerForCards child2 in children)
+            foreach (CardTrackableEventHandler child2 in children)
             {
                 if (child.id != child2.id)
                 {
@@ -60,7 +58,7 @@ public class Validator : MonoBehaviour
     private int NumberOfMyChildrenInfrontOfCamera()
     {
         int cardNumber = 0;
-        foreach (DefaultTrackableEventHandlerForCards child in children)
+        foreach (CardTrackableEventHandler child in children)
         {
             if (child.presentTime > timeToCountCard)
             {

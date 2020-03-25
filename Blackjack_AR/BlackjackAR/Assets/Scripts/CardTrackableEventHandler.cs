@@ -1,12 +1,10 @@
 ﻿using UnityEngine;
-using Vuforia;
 using System.Collections;
-using System.Collections.Generic;
 
 
 namespace Vuforia
 {
-    public class DefaultTrackableEventHandlerForCards : MonoBehaviour, ITrackableEventHandler
+    public class CardTrackableEventHandler : MonoBehaviour, ITrackableEventHandler
     {
         public int id;
         public bool tracked;

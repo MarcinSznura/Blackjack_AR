@@ -1,2 +1,2 @@
 # Blackjack_AR
-This is blackjack game in augmented reality
+Blackjack card game in augmented reality

@@ -17,13 +17,13 @@ MonoBehaviour:
     ufoLicenseKey: QVhGbWcrUC8vLy8vQUFBQUtBRmJsS3dzNWtQaGh2QnNZeTdOY2dFVzFRS0VpZzVPOXFJZEFENGM2OUtwWk1Bd25kc0c1ZTlsUTNRSVNQeXFTWVpMUkNBdnVuRzhhU1djQzZHa2pSVGdLb1Vjd09PRGVJT2dNNnlhNWcvQ09veWp3TzRhR0pSYXRBblBxL0NWQmN1akFsVU5KV1p1ZVo1YVBUOGZpdXVIM3AvUGVDSHdXN0ZaQXA4WE5YWUg5Y0xGblJuT2ZoMUpXWDFGaUZwaU11ZkJyM0VrdWw2bVdXSFlBYW14RFJYcEl4UGV6VEVvSnFFcDhSNExSRXNvMzcwUVI2UHJxTlNsMkpHekFwdzdQMU5CUzd0N1BQeVFoL2NnaVdRdzNqb0o1SHNJaEhJRHlRUm9odHBiUmY5bkJyM2hscWZUTzYvNlZ6cFAyWGVEaXZIdi91cDlFM0VpSFdOZFEzSi9oMGNJWlRyb29jc1U1V1BUeENMSVhtR0w=
     delayedInitialization: 0
     cameraDeviceModeSetting: -1
-    maxSimultaneousImageTargets: 10
-    maxSimultaneousObjectTargets: 5
+    maxSimultaneousImageTargets: 4
+    maxSimultaneousObjectTargets: 4
     useDelayedLoadingObjectTargets: 0
     cameraDirection: 0
     mirrorVideoBackground: 0
     version: 8.0.10
-    eulaAcceptedVersions: '{"Values":["8.3","8.6","8.5","8.0"]}'
+    eulaAcceptedVersions: '{"Values":["8.3","8.6","8.5","8.0","0.0"]}'
   digitalEyewear:
     cameraOffset: 0.06
     distortionRenderingLayer: 31
@@ -64,7 +64,7 @@ MonoBehaviour:
     autoInitTracker: 0
     autoStartTracker: 0
   webcam:
-    deviceNameSetInEditor: 
+    deviceNameSetInEditor: Live! Cam Sync HD VF0770
     flipHorizontally: 0
     turnOffWebCam: 0
     renderTextureLayer: 30

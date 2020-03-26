@@ -240,9 +240,9 @@ public class GameMaster : MonoBehaviour
 
     public void Raise1000()
     {
-        if (betProposition + 1000 <= playerBalance)
+        if (betProposition + 500 <= playerBalance)
         {
-            betProposition += 1000;
+            betProposition += 500;
         }
     }
 
@@ -266,7 +266,7 @@ public class GameMaster : MonoBehaviour
 
     public void Reduce1000()
     {
-        betProposition -= 1000;
+        betProposition -= 500;
         if (betProposition < 0)
         {
             betProposition = 0;

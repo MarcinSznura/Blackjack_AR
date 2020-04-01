@@ -375,10 +375,19 @@ public class GameMaster : MonoBehaviour
         {
             if (!WillAiWinNow())
             {
-                yield return new WaitForSeconds(time);
-                DrawCard();
-                ShowCard(aiHand[aiHand.Count-1],aiHand.Count - 1);
-                aiPlaying = false;
+                if (aiScore == playerScore && aiScore < 17)
+                {
+                    yield return new WaitForSeconds(time);
+                    aiPlaying = false;
+                    state = States.Fighting;
+                }
+                else
+                {
+                    yield return new WaitForSeconds(time);
+                    DrawCard();
+                    ShowCard(aiHand[aiHand.Count - 1], aiHand.Count - 1);
+                    aiPlaying = false;
+                }
             }
             else
             {

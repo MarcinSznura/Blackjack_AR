@@ -197,7 +197,7 @@ public class GameMaster : MonoBehaviour
 
     void ShowCard(int cardIndex, int handIndex)
     {
-        if (handIndex < 5)
+        if (handIndex < 4)
         {
             Instantiate(allDeck[cardIndex],
                 new Vector2(spawnPosition1.transform.position.x + (200 * handIndex), spawnPosition1.transform.position.y),
@@ -206,7 +206,7 @@ public class GameMaster : MonoBehaviour
         else
         {
             Instantiate(allDeck[cardIndex],
-               new Vector2(spawnPosition1.transform.position.x + (200 * (handIndex-5)), spawnPosition1.transform.position.y-300),
+               new Vector2(spawnPosition1.transform.position.x + (200 * (handIndex-4)), spawnPosition1.transform.position.y-300),
                Quaternion.identity, gameCanvas.transform);
         }
     }

@@ -536,6 +536,11 @@ public class GameMaster : MonoBehaviour
         return playerBalance;
     }
 
+    public void ChangePlayerBalance(int money)
+    {
+        playerBalance += money;
+    }
+
     public int GetPlayerBetProposition()
     {
         return betProposition;

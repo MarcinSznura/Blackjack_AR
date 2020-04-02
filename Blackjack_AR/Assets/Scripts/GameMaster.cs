@@ -191,24 +191,25 @@ public class GameMaster : MonoBehaviour
     void SpawnHidenCard(int handIndex)
     {
             Instantiate(hidenCardPrefab,
-                new Vector2(spawnPosition1.transform.position.x + (200 * handIndex), spawnPosition1.transform.position.y),
+                //new Vector2(spawnPosition1.transform.position.x + (200 * handIndex), spawnPosition1.transform.position.y),
+                new Vector2(spawnPosition1.transform.position.x, spawnPosition1.transform.position.y),
                 Quaternion.identity, gameCanvas.transform);
     }
 
     void ShowCard(int cardIndex, int handIndex)
     {
-        if (handIndex < 4)
-        {
+        //if (handIndex < 4)
+        //{
             Instantiate(allDeck[cardIndex],
                 new Vector2(spawnPosition1.transform.position.x + (200 * handIndex), spawnPosition1.transform.position.y),
                 Quaternion.identity, gameCanvas.transform);
-        }
-        else
-        {
-            Instantiate(allDeck[cardIndex],
+        //}
+        //else
+        //{
+            /*Instantiate(allDeck[cardIndex],
                new Vector2(spawnPosition1.transform.position.x + (200 * (handIndex-4)), spawnPosition1.transform.position.y-300),
-               Quaternion.identity, gameCanvas.transform);
-        }
+               Quaternion.identity, gameCanvas.transform);*/
+       // }
     }
 
     void ClearHands()
@@ -375,7 +376,7 @@ public class GameMaster : MonoBehaviour
         {
             if (!WillAiWinNow())
             {
-                if (aiScore == playerScore && aiScore < 17)
+                if (aiScore == playerScore && aiScore > 17)
                 {
                     yield return new WaitForSeconds(time);
                     aiPlaying = false;

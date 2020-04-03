@@ -1,4 +1,4 @@
-<img src="Blackjack_AR/Cards PNG/karta9.png" width="200">
+<img src="Cards PNG/karta9.png" width="200">
 
 # Blackjack_AR
 Blackjack card game in augmented reality for android devices. Made in Unity with Vuforia Engine.

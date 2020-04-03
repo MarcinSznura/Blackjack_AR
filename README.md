@@ -7,7 +7,7 @@ Blackjack card game in augmented reality for android devices. Made in Unity with
 
 To play this game you will need:
 - special augmentable cards that you will find in "Cards PNG" file.
-- apk file install on you android device with camera
+- apk file installed on your android device with camera
 
 ### Installing
 

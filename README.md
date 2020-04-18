@@ -22,3 +22,7 @@ To play this game you will need:
 ## Game Presentation
 
 https://www.youtube.com/watch?v=qcDTHRKMG7Y&feature=youtu.be
+
+## APK File Download
+
+https://drive.google.com/drive/folders/1UBYS1QxdNFyvDBjY4gwGLJDiExxWQ_wX
